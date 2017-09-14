@@ -1,13 +1,13 @@
-const express = require('express');
-
-const router = express.Router();
+// const express = require('express');
+//
+// const router = express.Router();
 
 // GET /shows
-router.get('/', (req, res) => {
-  res.json({
-    message: '🌮'
-  })
-})
+// router.get('/', (req, res) => {
+//   res.json({
+//     message: '🌮'
+//   })
+// })
 
 // GET /shows/:id
   // Route to get one show by ID
@@ -21,4 +21,4 @@ router.get('/', (req, res) => {
 // DELETE /shows/:id
   // Route to delete a show by ID
 
-module.exports = router;
+// module.exports = router;
