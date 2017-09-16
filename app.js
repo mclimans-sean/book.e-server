@@ -4,15 +4,67 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
+require('dotenv').config()
+require('./seeds/rooms.js')
+
+// Configure Facebook Strategy
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: "http://localhost:3000/auth/facebook/return",
+  profileFields: ['id', 'displayName', 'photos']
+},
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+))
+
+passport.serializeUser(function (user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function (userId, done) {
+  User.findById(userId, done);
+});
 
 const app = express();
 
-const rooms = require('./api/rooms')
+require('./database')
 
-// const shows = require('./api/shows')
+const sessionOptions = {
+  secret: 'This is a super secret',
+  resave: true,
+  saveUninitialized: true,
+  // store: new MongoStore({
+  //   mongooseConnection: mongoose.connect('mongodb://localhost/joke-e')
+  // })
+}
+
+app.use(session(sessionOptions));
+
+// Initialize passport
+app.use(passport.initialize());
+
+// Restore session
+app.use(passport.session());
+
+
+
+const users = require('./routes/users')
+const auth = require('./routes/auth')
+const rooms = require('./routes/rooms')
+const shows = require('./routes/shows')
 
 // const port = process.env.PORT || 3000;
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -20,15 +72,22 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3001',
+  optionsSuccessStatus: 200
+}))
 
+app.use('/api/users', users);
+app.use('/api/auth', auth);
 app.use('/api/rooms', rooms);
+app.use('/api/shows', shows);
 
 const router = express.Router();
 
-app.use(function(req, res, next) {
-  console.log('This is working');
-  next();
-})
+// app.use(function(req, res, next) {
+//   console.log('This is working');
+//   next();
+// })
 
 
 // catch 404 and forward to error handler
