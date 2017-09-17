@@ -1,5 +1,6 @@
 const express = require('express');
 const Show = require('../models/show')
+const Room = require('../models/room')
 // const shows = require('../mock/shows.json');
 
 const router = express.Router();
@@ -12,6 +13,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
   Show.findOne({_id: req.params.id})
+    .populate('room_id')
     .then(function (show) {
       res.send(show);
     })
