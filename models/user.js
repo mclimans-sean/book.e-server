@@ -25,7 +25,15 @@ const userSchema = new Schema({
   video_url: {
     type: String,
     required: false
-  }
+  },
+  endorser: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  endorsee: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }]
 })
 
 const model = mongoose.model('User', userSchema)

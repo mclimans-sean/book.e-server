@@ -23,7 +23,19 @@ const showSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Room'
   },
-  is_clean: Boolean
+  booker_id: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
+  is_clean: Boolean,
+  interested: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  wishlist: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }]
 })
 
 const model = mongoose.model('Show', showSchema)
