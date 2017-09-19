@@ -8,6 +8,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
+// const FacebookTokenStrategy = require('passport-facebook-token');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -18,8 +19,8 @@ require('./seeds/rooms.js')
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:3000/auth/facebook/return",
-  profileFields: ['id', 'displayName', 'photos']
+  callbackURL: "http://localhost:3000/auth/facebook/callback",
+  profileFields: ['id', 'displayName', 'email', 'photo']
 },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
@@ -27,6 +28,17 @@ passport.use(new FacebookStrategy({
     });
   }
 ))
+
+// passport.use(new FacebookTokenStrategy({
+//     clientID: process.env.FACEBOOK_APP_ID,
+//     clientSecret: process.env.FACEBOOK_APP_SECRET,
+//     profileFields: [ "id", "displayName", "email", "picture" ]
+//   }, function(accessToken, refreshToken, profile, done) {
+//     User.findOrCreate({facebookId: profile.id}, function (error, user) {
+//       return done(error, user);
+//     });
+//   }
+// ));
 
 passport.serializeUser(function (user, done) {
   done(null, user._id);
@@ -39,6 +51,7 @@ passport.deserializeUser(function (userId, done) {
 const app = express();
 
 require('./database')
+
 
 const sessionOptions = {
   secret: 'This is a super secret',
@@ -83,11 +96,6 @@ app.use('/api/rooms', rooms);
 app.use('/api/shows', shows);
 
 const router = express.Router();
-
-// app.use(function(req, res, next) {
-//   console.log('This is working');
-//   next();
-// })
 
 
 // catch 404 and forward to error handler
