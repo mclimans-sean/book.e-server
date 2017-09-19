@@ -2,6 +2,25 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const interestedSchema = new Schema({
+  interested_id: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  }
+})
+
+const wishlistSchema = new Schema({
+  wishlist_id: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  }
+});
+
+// wishlistSchema.method("update", function (updates, callback) {
+//   Object.assign(this, updates);
+//   this.parent().save(callback);
+// });
+
 const showSchema = new Schema({
   name: {
     type: String,
@@ -10,10 +29,6 @@ const showSchema = new Schema({
   date: {
     type: Date,
     required: [true, 'Date is required']
-  },
-  time: {
-    type: String,
-    required: [true, 'Time of show is required']
   },
   description: {
     type: String,
@@ -28,14 +43,10 @@ const showSchema = new Schema({
     ref: 'User'
   },
   is_clean: Boolean,
-  interested: [{
-    type: Schema.ObjectId,
-    ref: 'User'
-  }],
-  wishlist: [{
-    type: Schema.ObjectId,
-    ref: 'User'
-  }]
+
+  interested: [interestedSchema],
+
+  wishlist: [wishlistSchema]
 })
 
 const model = mongoose.model('Show', showSchema)
