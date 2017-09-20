@@ -32,16 +32,10 @@ router.get('/:id', (req, res, next) => {
   Show.findOne({_id: req.params.id})
     .populate('room_id')
     .populate('booker_id')
-    .populate({
-      path: 'wishlist',
-      populate: {
-        path: 'wishlist_id',
-        model: 'Show'
-      }
-    })
+    .populate('wishlist')
     .then(function (show) {
       res.send(show);
-    })
+    }).catch(next);
 })
 
 router.post('/', (req, res, next) => {
