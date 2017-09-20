@@ -19,7 +19,7 @@ require('./seeds/rooms.js')
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:3000/auth/facebook/callback",
+  callbackURL: "http://localhost:3000/api/auth/facebook/return",
   profileFields: ['id', 'displayName', 'email', 'photo']
 },
   function(accessToken, refreshToken, profile, cb) {
@@ -28,17 +28,6 @@ passport.use(new FacebookStrategy({
     });
   }
 ))
-
-// passport.use(new FacebookTokenStrategy({
-//     clientID: process.env.FACEBOOK_APP_ID,
-//     clientSecret: process.env.FACEBOOK_APP_SECRET,
-//     profileFields: [ "id", "displayName", "email", "picture" ]
-//   }, function(accessToken, refreshToken, profile, done) {
-//     User.findOrCreate({facebookId: profile.id}, function (error, user) {
-//       return done(error, user);
-//     });
-//   }
-// ));
 
 passport.serializeUser(function (user, done) {
   done(null, user._id);
