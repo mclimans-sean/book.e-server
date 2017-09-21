@@ -44,6 +44,41 @@ router.post('/', (req, res, next) => {
   }).catch(next);
 })
 
+
+
+router.put('/:id', (req, res, next) => {
+  Show.findByIdAndUpdate({_id: req.params.id}, req.body)
+    .then(function () {
+      Show.findOne({_id: req.params.id})
+        .then(function (show) {
+          res.send(show);
+      })
+    }).catch(next);
+})
+
+
+router.delete('/:id', (req, res, next) => {
+  Show.findByIdAndRemove({_id: req.params.id})
+    .then(function (show) {
+      res.send(show)
+    })
+})
+
+// GET wishlist
+// router.get('/:sid/wishlist', (req, res, next) => {
+//   req.Show.wishlist.find({})
+//     .populate({
+//       path: 'wishlist',
+//       populate: {
+//         path: '_id',
+//         model: 'User'
+//       }
+//     })
+//     .then(function (wishlist) {
+//       res.send(wishlist);
+//     })
+// })
+
 // POST to wishlist ****************************
 router.post('/:sID/wishlist', (req, res, next) => {
   req.show.wishlist.push(req.body);
@@ -64,24 +99,6 @@ router.post('/:sID/interested', (req, res, next) => {
     res.json(show)
     console.log(show);
   })
-})
-
-router.put('/:id', (req, res, next) => {
-  Show.findByIdAndUpdate({_id: req.params.id}, req.body)
-    .then(function () {
-      Show.findOne({_id: req.params.id})
-        .then(function (show) {
-          res.send(show);
-      })
-    }).catch(next);
-})
-
-
-router.delete('/:id', (req, res, next) => {
-  Show.findByIdAndRemove({_id: req.params.id})
-    .then(function (show) {
-      res.send(show)
-    })
 })
 
 module.exports = router;

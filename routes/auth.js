@@ -4,15 +4,18 @@ const passport = require('passport');
 
 // GET /auth/login/facebook
 router.get('/login/facebook',
-  passport.authenticate('facebook', {scope: ["email"]}));
+  passport.authenticate('facebook'));
+
 
 // GET /auth/facebook/return
 router.get('/facebook/return',
-  passport.authenticate('facebook', {failureRedirect: '/'}),
+  passport.authenticate('facebook', {failureRedirect: '/login'}),
     function (req, res) {
       // Success, redirect to profile page
-      res.redirect('/profile')
+      res.redirect('/home')
     });
+
+
 
 // GET /auth/logout
 router.get('/logout', function (req, res) {
