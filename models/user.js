@@ -17,6 +17,13 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
+
+  profile_pic: String,
+
+  city: String,
+
+  state: String,
+
   is_comedian: Boolean,
   bio: {
     type: String,
