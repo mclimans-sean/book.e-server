@@ -18,6 +18,11 @@ const userSchema = new Schema({
     unique: true
   },
 
+  password: {
+    type: String,
+    required: true
+  },
+
   profile_pic: String,
 
   city: String,
