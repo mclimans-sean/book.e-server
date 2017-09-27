@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken')
 const Schema = mongoose.Schema;
 
 var userSchema = new Schema({
@@ -66,10 +66,8 @@ userSchema.statics.authenticate = function (email, password, callback) {
         console.log('bcrypt', error, result);
         if (result === true) {
           return callback(null, user);
-
         } else {
           return callback(error);
-
         }
       })
     })

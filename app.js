@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const jwt = require('jsonwebtoken')
 const FacebookStrategy = require('passport-facebook').Strategy;
 // const FacebookTokenStrategy = require('passport-facebook-token');
 const session = require('express-session');
