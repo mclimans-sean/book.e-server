@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+var userSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -50,8 +51,10 @@ const userSchema = new Schema({
 
 // authenticate input against database documents
 userSchema.statics.authenticate = function (email, password, callback) {
+  console.log('authenticate', email, password);
   User.findOne({email: email})
     .exec(function (error, user) {
+      console.log('find one', error, user);
       if (error) {
         return callback(error);
       } else if (!user) {
@@ -60,10 +63,13 @@ userSchema.statics.authenticate = function (email, password, callback) {
         return callback(err);
       }
       bcrypt.compare(password, user.password, function (error, result) {
+        console.log('bcrypt', error, result);
         if (result === true) {
           return callback(null, user);
+
         } else {
-          return callback();
+          return callback(error);
+
         }
       })
     })
@@ -81,6 +87,6 @@ userSchema.pre('save', function (next) {
   })
 })
 
-const model = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
 
-module.exports = model;
+module.exports = User;

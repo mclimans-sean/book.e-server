@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
+
+
 // GET /auth/login/facebook
 router.get('/login/facebook',
   passport.authenticate('facebook'));

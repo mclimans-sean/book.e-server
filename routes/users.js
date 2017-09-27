@@ -1,6 +1,6 @@
 const express = require('express');
-const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const User = require('../models/user.js');
 
 const router = express.Router();
 
@@ -17,22 +17,23 @@ router.get('/:id', (req, res, next) => {
     })
 })
 
+// POST ROUTE TO SIGNUP
 router.post('/register', (req, res, next) => {
   User.create(req.body).then(function (user) {
     res.send(user);
   }).catch(next);
 })
 
+// POST ROUTE TO LOGIN
 router.post('/login', (req, res, next) => {
-  User.findOne({
-    email: req.body.email
-  }).exec(function (err, user) {
-    if (err) {
-      console.log(err);
-      res.status(400).json(err)
+  User.authenticate(req.body.email, req.body.password, function (error, user) {
+    if (error || !user) {
+      res.status(401)
+      // .json('Wrong email or password');
+      return next(new Error('Wrong email or password'));
     } else {
-      console.log('User found', user);
-      res.status(200).json(user)
+      req.session.id = user._id;
+      res.json(user)
     }
   })
 })
