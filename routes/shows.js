@@ -2,6 +2,7 @@ const express = require('express');
 const Show = require('../models/show')
 const Room = require('../models/room')
 const User = require('../models/user')
+const authMiddleware = require('../auth/middleware')
 
 // const shows = require('../mock/shows.json');
 
@@ -38,7 +39,7 @@ router.get('/:id', (req, res, next) => {
     }).catch(next);
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authMiddleware.isAuthorized, (req, res, next) => {
   Show.create(req.body).then(function (show) {
     res.send(show);
   }).catch(next);

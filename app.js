@@ -44,7 +44,7 @@ require('./database')
 
 
 const sessionOptions = {
-  secret: 'This is a super secret',
+  secret: process.env.SECRET_OPTION,
   resave: true,
   saveUninitialized: true,
   // store: new MongoStore({
